@@ -81,11 +81,33 @@ class Drivy
 
       result.push({
                     "id" => rental["id"],
-                    "price" => price,
-                    "options" => {
-                      "deductible_reduction" => deductible_reduction
-                    },
-                    "commission" => commission
+                    "actions" => [
+                      {
+                        "who" => "driver",
+                        "type" => "debit",
+                        "amount" => price + deductible_reduction
+                      },
+                      {
+                        "who" => "owner",
+                        "type" => "credit",
+                        "amount" => price - total_commission
+                      },
+                      {
+                        "who" => "insurance",
+                        "type" => "credit",
+                        "amount" => commission["insurance_fee"]
+                      },
+                      {
+                        "who" => "assistance",
+                        "type" =>"credit",
+                        "amount" => commission["assistance_fee"]
+                      },
+                      {
+                        "who" => "drivy",
+                        "type" => "credit",
+                        "amount" => commission["drivy_fee"] + deductible_reduction
+                      }
+                    ]
       })
     end
 
@@ -112,4 +134,4 @@ drivy = Drivy.new
 
 drivy.read_data "data.json"
 
-drivy.output "output.json"
+drivy.output "test.json"

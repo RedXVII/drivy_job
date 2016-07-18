@@ -134,4 +134,4 @@ drivy = Drivy.new
 
 drivy.read_data "data.json"
 
-drivy.output "test.json"
+drivy.output "output.json"

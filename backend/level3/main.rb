@@ -47,6 +47,7 @@ class Drivy
       renting_days = (Date.parse(rental.end_date) - Date.parse(rental.start_date)).to_i + 1
       car = rental.car
 
+      #price computation
       ppk = car.price_per_km * rental.distance
 
       ppd = 0
@@ -63,10 +64,17 @@ class Drivy
         ppd = ppd + car.price_per_day * (renting_days - previous_days) * discount
       end
 
-
       price = ppk.to_i + ppd.to_i
 
-      result.push({"id" => rental["id"], "price" => price})
+      #commission computation
+      total_commission = (price * 0.3).to_i
+      commission = {}
+
+      commission["insurance_fee"] = (total_commission * 0.5).to_i
+      commission["assistance_fee"] = renting_days * 100
+      commission["drivy_fee"] = total_commission - commission["insurance_fee"] - commission["assistance_fee"]
+
+      result.push({"id" => rental["id"], "price" => price, "commission" => commission})
     end
 
     @result = { "rentals" => result }
